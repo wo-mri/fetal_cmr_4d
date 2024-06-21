@@ -1,97 +1,62 @@
-
-
-
 # fetal_cmr_4d
 
 fetal whole-heart 4D magnitude and flow cine reconstruction using multiple real-time non-coplanar balanced SSFP stacks
 
-![](4dflow_volume.gif)  
-
 ## Publications
-
-__Fetal whole-heart 4D flow cine MRI using multiple non-coplanar balanced SSFP stacks__  
-Thomas A. Roberts, Joshua FP van Amerom, Alena Uus, David FA Lloyd, Anthony N. Price, Jacques-Donald  Tournier, Laurence H. Jackson, Shaihan J Malik, Milou PM van Poppel, Kuberan Pushparajah, Mary A Rutherford, Reza Rezavi, Maria Deprez, Joseph V. Hajnal.
-13 May 2019. bioRxiv: [10.1101/635797](https://doi.org/10.1101/635797) (_preprint_) 
 
 __Fetal whole-heart 4D imaging using motion-corrected multi-planar real-time MRI__  
 Joshua FP van Amerom, David FA Lloyd, Maria Deprez, Anthony N Price, Shaihan J Malik, Kuberan Pushparajah, Milou PM van Poppel, Mary A Rutherford, Reza Razavi, Joseph V Hajnal.  
-13 Apr 2019. Magnetic Resonance in Medicine. 2019. doi: [10.1002/mrm.27798](https://doi.org/10.1002/mrm.27798) (_accepted, peer-reviewed+revised_)  
-05 Dec 2018. arXiv: [1812.02249](https://arxiv.org/abs/1812.02249) (_preprint_)  
+_Magn Reson Med_. 2019; 82: 1055–1072. doi: [10.1002/mrm.27798](https://doi.org/10.1002/mrm.27798) 
+
+__Fetal whole-heart 4D flow cine MRI using multiple non-coplanar balanced SSFP stacks__  
+Thomas A. Roberts, Joshua FP van Amerom, Alena Uus, David FA Lloyd, Anthony N. Price, Jacques-Donald  Tournier, Laurence H. Jackson, Shaihan J Malik, Milou PM van Poppel, Kuberan Pushparajah, Mary A Rutherford, Reza Rezavi, Maria Deprez, Joseph V. Hajnal.
+_Nature Communications_  2020; 11: 1. doi: [10.1038/s41467-020-18790-1](https://doi.org/10.1038/s41467-020-18790-1) 
 
 ## Directories
 
-__4dflow__ - preprocessing and postprocessing scripts for flow reconstruction  
-
 __4drecon__ - preprocessing and 4D reconstruction scripts  
-
-__SVRTK__ - 4D reconstruction submodule linked to [github.com/SVRTK/SVRTK](https://github.com/SVRTK/SVRTK)
 
 __cardsync__ - cardiac synchronisation   
 
 __eval__ - summarise and evaluate results
 
-__ktrecon__ - k-t sense reconstruction submodule linked to [github.com/mriphysics/ktrecon](https://github.com/mriphysics/ktrecon)
+__lib__ - supplementary functions and external libraries
 
-__paraview__ - visualisation of 4D flow volumes
+__vis__ - visualisation utilities
 
-__synthflow_phantom__ - simulated flow phantom and 2D velocity-encoded slice acquisition submodule linked to [github.com/tomaroberts/synthflow_phantom](github.com/tomaroberts/synthflow_phantom)
-
-
+<!-- TODO: update installation description
 ## Installation
 
 Add repository to MATLAB path.
 
-Build instructions for SVRTK can be found in the InstallationInstructions.txt file at [github.com/SVRTK/SVRTK](https://github.com/SVRTK/SVRTK).
-
 Install MITK Workbench for viewing data and drawing masks: [mitk.org/wiki/The_Medical_Imaging_Interaction_Toolkit_(MITK)](http://mitk.org/wiki/The_Medical_Imaging_Interaction_Toolkit_(MITK)). Note, 2016.11 version is known to be stable.
+ -->
 
-For Python code, install [Jupyter](https://jupyter.org/) or [PyCharm](https://www.jetbrains.com/pycharm/).
-
-Install Paraview for visualisation of 4D flow volumes: [paraview.org](https://www.paraview.org/). Note, version 5.4.1 is known to be stable.
-
-Installation time varies depending on how many libraries and programs you already have installed. Typically everything can be installed in less than one hour.
-
-
-## External Dependencies
-
-__ReconFrame__ - software platform providing the tools and the functionality to develop and execute a complete image reconstruction of Philips MR data ([gyrotools.com/gt/index.php/products/reconframe](https://www.gyrotools.com/gt/index.php/products/reconframe))
-
-
-## Demo Dataset
-
-A demo dataset can be [downloaded from Figshare](https://figshare.com/collections/Demo_dataset_for_fetal_whole-heart_4D_reconstruction/4689437). 
-
-The demo dataset consists of multiple stacks of 2D slices acquired in a normal fetus. A Matlab script is included alongside the demo dataset, which follows the 4D reconstruction framework outlined below. The script comprises various Matlab functions and tells the user when to run the bash scripts.
-
-The expected run time for the demo, from slices to 4D volumes, is 6+ hours depending on computer power and familiarity with the concepts and scripts.
-
-Note: the nifti files provided in the demo dataset have been reconstructed using the ktrecon submodule, which requires ReconFrame. Similarly, we provide the gradient first moment text files, which we would normally automatically generate using ReconFrame.
+<!-- TODO: add description of dependencies including SVRTK
+## External Dependencies 
+-->
 
 ## Framework 
 
-This framework produces 4D magnitude and velocity cine volumes. The framework consists of:
+This framework produces 4D magnitude cine volumes. The velocity-sensitive phase component illustrated in the figure has been removed.
 
-**PART 0 (2D MRI Acquisition and k-t SENSE Reconstruction):**
-1. multiple stacks of real-time non-coplanar 2D bSSFP slices are acquired using a 1.5T MRI scanner and reconstructed offline using ReconFrame.
+**2D MRI Acquisition and Reconstruction:**
+* multiple stacks of real-time non-coplanar 2D bSSFP slices and reconstructed as real-time and time-averaged images. 
 
-**PART 1 (Anatomical Reconstruction):**
-1. an initial motion correction stage to achieve rough spatial alignment of the fetal heart using temporal mean (i.e., static) images for stack-stack registration followed by slice-volume registration interleaved with static volume (3D) reconstruction; 
-2. cardiac synchronisation, including heart rate estimation and slice-slice cardiac cycle alignment; and 
-3. further motion-correction using dynamic image frames interleaved with 4D reconstruction; and 
-4. 4D magnitude cine volume reconstruction, including outlier rejection.
-
-**PART 2 (Flow Reconstruction):**
-
-5. background phase correction of phase images;
-6. gradient first moment reorientation to account for motion with respect to the velocity-encoding gradients;
-7. 4D velocity cine volume reconstruction; and
-8. background drift correction of 4D velocity volumes.
+**Anatomical Reconstruction:**
+* an initial motion correction stage to achieve rough spatial alignment of the fetal heart using temporal mean (i.e., static) images for stack-stack registration followed by slice-volume registration interleaved with static volume (3D) reconstruction; 
+* cardiac synchronisation, including heart rate estimation and slice-slice cardiac cycle alignment; and 
+* further motion-correction using dynamic image frames interleaved with 4D reconstruction; and 
+* 4D magnitude cine volume reconstruction, including outlier rejection.
 
 ![](4d_framework.png)  
 
+
+<!-- TODO: update the steps below to reflect 
+
 ## Reconstruction Steps
 
-The reconstruction process is performed using a combination of Matlab and bash scripts which call various C++ functions in the SVRTK toolbox. A final step using Python is performed to automate visualisation of the 4D flow volumes in Paraview, however, this is optional as the .vtk files can be manually loaded into Paraview.
+The reconstruction process is performed using a combination of Matlab and bash scripts which call various C++ functions in the SVRTK toolbox. 
 
 ### Part 0 — Directory setup and MRI
 
@@ -143,7 +108,7 @@ e.g., in shell:
             cp ktrecon/s*_rlt_ab.nii.gz data;
             ```
 
-### Part 1 — 4D Magnitude CINE volume reconstruction
+### 4D Magnitude CINE volume reconstruction
 
 3. __Draw Fetal Heart Masks__
       - manually draw fetal heart masks for each `sXX_dc_ab.nii.gz` file (e.g., using the [Medical Imaging ToolKit (MITK) Workbench](http://mitk.org/wiki/Downloads#MITK_Workbench))
@@ -246,56 +211,5 @@ e.g., in shell:
 		S = summarise_recon( '~/path/to/recon/directory/cine_vol', '~/path/to/recon/directory/cardsync', 'verbose', true );
 		I = plot_info( '~/path/to/recon/directory/cine_vol/info.tsv');
 		```
-
-### Part 2 — 4D Velocity CINE volume reconstruction
-13. __Draw Uterus Masks__
-        - manually draw uterus masks for each `sXX_dc_ab.nii.gz` file (e.g., using the [Medical Imaging ToolKit (MITK) Workbench](http://mitk.org/wiki/Downloads#MITK_Workbench))
-            - save segmentation as `sXX_mask_uterus.nii.gz` segmentation in 'mask' directory
-
-14. __Background Phase Correction__
-    - generate phase corrected stacks by subtraction of 3D polynomial
-        - run `fcmr_4dflow_preprocessing`, in Matlab:
-            ```matlab
-			cd(reconDir);
-			fcmr_4dflow_preprocessing( reconDir );
-			disp('fcmr_4dflow_preprocessing complete ...');
-            ```
-
-15. __Extract Gradient First Moments__
-    - generate text files containing gradient first moment information for each stack
-        - run `fcmr_4dflow_get_first_moments`, in Matlab:
-            ```matlab
-			cd(reconDir);
-			fcmr_4dflow_get_first_moments( reconDir );
-			disp('fcmr_4dflow_get_first_moments complete ...');
-            ```
-16. __Gradient First Moment Reorientation & 4D Velocity Volumetric Reconstruction__
-    - gradient first moment reorientation performed as part of 4D reconstruction
-    - recon 4D velocity volume, \
-	    e.g., in shell: 
-	    ```shell
-	    RECONDIR=~/path/to/recon/directory
-	    ./recon_vel_vol.bash $RECONDIR vel_vol
-	    ```
-17. __Background Drift Correction__
-    - background velocity drift correction
-    - recon 4D velocity volume, \
-        - run `fcmr_4dflow_postprocessing`, in Matlab:
-            ```matlab
-			cd(reconDir);
-			fcmr_4dflow_postprocessing( reconDir, 'useVelDriftCorr', true, 'fileExt', 'polyCorr' );
-			disp('fcmr_4dflow_postprocessing complete ...');
-            ```
-
-### Part 3 — Whole-heart 4D Blood Flow Visualisation
-18. __Create 4D Volumes for Paraview__
-    - Edit the fields of fcmr_4dflow_make_vector_vol.py to point at `RECONDIR`,
-        - run `fcmr_4dflow_make_vector_vol.py`
-    - Note: this is an optional step to automate the process of importing the data into Paraview
-	    - alternatively, the `.vtk` files located in `/vel_vol_4d/paraview` can be loaded from within Paraview
-18. __View 4D Blood Flow Volume in Paraview__
-    - In Paraview,
-	    - `File > Load State`
-	    - Navigate to `/vel_vol_4d/paraview`
-	    - Open `fcmr*_paraview.pvsm`
  
+-->
