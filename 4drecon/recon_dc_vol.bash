@@ -8,7 +8,7 @@ trap cleanup SIGINT SIGTERM ERR EXIT
 usage() {
   cat << EOF
 
-Usage: $(basename "${BASH_SOURCE[0]}") [-h] recondir voldesc
+Usage: $(basename "${BASH_SOURCE[0]}") [options] recondir voldesc
 
 Create (and run) command to perform slice-to-volume reconstrution (SVR) on stacks of time-averaged images 
 using SVRTK application reconstructCardiac.
@@ -31,12 +31,15 @@ and (optionally) runs the reconstruction.
 
 Available options:
 
---resolution      Isotropic resolution of reconstructed volume
---nmc             Number of motion-correction iterations
---nsr             Number of super-resolution reconstruction iterations
---nsrlast         Number of super-resolution reconstruction iterations following last motion-correction iteration
---noeval          Do not evaluate the reconstruction commands
---help            Print this help and exit
+  parameters
+    --resolution      Isotropic resolution of reconstructed volume
+    --nmc             Number of motion-correction iterations
+    --nsr             Number of super-resolution reconstruction iterations
+    --nsrlast         Number of super-resolution reconstruction iterations following last motion-correction iteration
+  
+  flags
+    --noeval          Do not evaluate the reconstruction commands
+    --help            Print this help and exit
 
 EOF
   exit
